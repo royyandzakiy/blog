@@ -19,7 +19,7 @@ endif()
 #=========================
 include(cmake/version.cmake) # reads version.txt -> PROJECT_VERSION_STRING (before project())
 project(
-  blog
+  blog-parser
   LANGUAGES CXX
   VERSION ${PROJECT_VERSION_STRING})
 
