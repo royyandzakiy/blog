@@ -1,4 +1,4 @@
 # My Blog
 Welcome to my blog.
 
-Check out my [posts](/posts/hello.html).
+Check out my [posts](/blog/posts/hello.html).
