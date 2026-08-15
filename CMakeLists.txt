@@ -19,7 +19,7 @@ endif()
 #=========================
 include(cmake/version.cmake) # reads version.txt -> PROJECT_VERSION_STRING (before project())
 project(
-  blog-parser
+  blog
   LANGUAGES CXX
   VERSION ${PROJECT_VERSION_STRING})
 
@@ -62,10 +62,4 @@ find_package(cmark CONFIG REQUIRED)
 #=========================
 # Targets
 #=========================
-add_subdirectory(app/src)
-
-#=========================
-# Tests & Coverage
-#=========================
-enable_testing() # ctest / gtest_discover_tests register the unit tests
-add_subdirectory(test)
+add_subdirectory(blog-parser)

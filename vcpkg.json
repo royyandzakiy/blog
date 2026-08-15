@@ -2,8 +2,6 @@
   "builtin-baseline": "8f63c9ed5897d7367a92a442a79f91721e0fd38f",
   "dependencies": [
     "cmark",
-    "fmt",
-    "gtest",
-    "crow"
+    "fmt"
   ]
 }
