@@ -18,11 +18,6 @@ jobs:
         echo "VCPKG_ROOT=${{ github.workspace }}/vcpkg" >> $GITHUB_ENV
         echo "${{ github.workspace }}/vcpkg" >> $GITHUB_PATH
     
-    - name: Install dependencies
-      run: |
-        ./vcpkg/vcpkg install cmark
-        # Add other deps if needed
-    
     - name: Configure CMake (use clang-linux-release preset)
       run: cmake --preset clang-linux-release -DVCPKG_ROOT_PATH=${{ github.workspace }}/vcpkg
     
