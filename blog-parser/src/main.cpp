@@ -138,19 +138,19 @@ int main() {
 
 		std::string post_list = "<ul>";
 		for (const auto &post : posts) {
-			post_list += "<li><a href='/posts/" + post.slug + ".html'>" + post.title + "</a></li>";
+			post_list += "<li><a href='/blog/posts/" + post.slug + ".html'>" + post.title + "</a></li>";
 		}
 		post_list += "</ul>";
 
 		std::string home_html = layout(md_to_html(home_content) + post_list);
-		write_file(output_dir / "index.html", home_html);
+		write_file(output_dir / "blog" / "index.html", home_html);
 
 		// 3. Generate about page
 		fs::path about_md = content_dir / "about.md";
 		if (fs::exists(about_md)) {
 			std::string about_md_content = read_file(about_md);
 			std::string about_html = layout("<h1>About</h1>" + md_to_html(about_md_content));
-			write_file(output_dir / "about.html", about_html);
+			write_file(output_dir / "blog" / "about.html", about_html);
 		}
 
 		std::cout << "\n✅ Generated " << posts.size() << " posts" << "\n";
