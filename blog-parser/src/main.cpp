@@ -72,7 +72,7 @@ std::string layout(const std::string &content) {
 		   "<html>\n"
 		   "<head><meta charset='utf-8'><title>My Blog</title></head>\n"
 		   "<body>\n"
-		   "<nav><a href='/'>Home</a> | <a href='/about.html'>About</a></nav>\n" +
+		   "<nav><a href='/blog/'>Home</a> | <a href='/blog/about.html'>About</a></nav>\n" +
 		   content +
 		   "</body>\n"
 		   "</html>";
@@ -143,14 +143,14 @@ int main() {
 		post_list += "</ul>";
 
 		std::string home_html = layout(md_to_html(home_content) + post_list);
-		write_file(output_dir / "blog" / "index.html", home_html);
+		write_file(output_dir / "index.html", home_html);
 
 		// 3. Generate about page
 		fs::path about_md = content_dir / "about.md";
 		if (fs::exists(about_md)) {
 			std::string about_md_content = read_file(about_md);
 			std::string about_html = layout("<h1>About</h1>" + md_to_html(about_md_content));
-			write_file(output_dir / "blog" / "about.html", about_html);
+			write_file(output_dir / "about.html", about_html);
 		}
 
 		std::cout << "\n✅ Generated " << posts.size() << " posts" << "\n";
