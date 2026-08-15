@@ -14,11 +14,10 @@ struct Post {
 	std::string html;
 };
 
-// Get content directory (relative to executable)
-fs::path get_content_dir() {
+// Get project root (where content/ directory is)
+fs::path get_project_root() {
 	// Start from current executable path
 	fs::path exe_path = fs::current_path();
-
 	fs::path search_path = exe_path;
 
 	// Strategy: go up until we find a directory containing "content" or "CMakeLists.txt"
@@ -95,11 +94,12 @@ std::string extract_title(const std::string &md) {
 
 int main() {
 	try {
-		// Determine paths
-		fs::path content_dir = get_content_dir();
-		fs::path posts_dir = content_dir / "posts";
-		fs::path output_dir = fs::current_path().parent_path().parent_path() / "html";
+		// Determine paths using consistent logic
+		fs::path project_root = get_project_root();
+		fs::path content_dir = project_root / "content";
+		fs::path output_dir = project_root / "html";
 
+		std::cout << "📁 Project root: " << project_root << "\n";
 		std::cout << "📁 Content: " << content_dir << "\n";
 		std::cout << "📁 Output:  " << output_dir << "\n";
 
@@ -112,6 +112,7 @@ int main() {
 
 		// 1. Generate posts
 		std::vector<Post> posts;
+		fs::path posts_dir = content_dir / "posts";
 		if (fs::exists(posts_dir) && fs::is_directory(posts_dir)) {
 			for (const auto &entry : fs::directory_iterator(posts_dir)) {
 				if (entry.path().extension() == ".md") {
