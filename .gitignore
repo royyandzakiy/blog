@@ -81,3 +81,5 @@ desktop.ini
 # ----- Editor swap/backup -----
 *~
 *.swp
+
+html/
