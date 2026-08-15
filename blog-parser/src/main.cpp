@@ -1,4 +1,6 @@
 #include <cmark.h>
+#include <cstddef>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -123,7 +125,7 @@ int main() {
 					post.html = md_to_html(md);
 					posts.push_back(post);
 
-					std::string page = layout("<h1>" + post.title + "</h1>" + post.html);
+					std::string page = layout("<h2>" + post.title + "</h2>" + post.html);
 					write_file(output_dir / "posts" / (post.slug + ".html"), page);
 					std::cout << "✅ Generated: " << post.slug << "\n";
 				}
