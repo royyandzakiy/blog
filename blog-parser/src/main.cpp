@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <iterator>
 #include <string>
 #include <vector>
 
@@ -15,28 +16,43 @@ struct Post {
 
 // Get content directory (relative to executable)
 fs::path get_content_dir() {
-	// Get executable path
+	// Start from current executable path
 	fs::path exe_path = fs::current_path();
 
-	// Since exe is at: C:/project-coding/cpp/202608/blog/bin/clang-cl/blog-parser.exe
-	// Content is at: C:/project-coding/cpp/202608/blog/content
+	fs::path search_path = exe_path;
 
-	// Go up 3 levels: bin/clang-cl/ -> blog/
-	fs::path content_dir = exe_path
-							   .parent_path() // bin/clang-cl/
-							   .parent_path() // bin/
-						   / "content";
+	// Strategy: go up until we find a directory containing "content" or "CMakeLists.txt"
+	for (int i = 0; i < 10; ++i) { // Max 10 levels up
+		if (fs::exists(search_path / "content")) {
+			return search_path;
+		}
 
-	return content_dir;
+		// Stop if we can't go up anymore
+		if (search_path.has_parent_path()) {
+			search_path = search_path.parent_path();
+		} else {
+			break;
+		}
+	}
+
+	// Fallback: assume we're in the project root's bin directory
+	fs::path fallback = exe_path.parent_path().parent_path();
+	if (fs::exists(fallback / "content")) {
+		return fallback;
+	}
+
+	// Last resort: use current working directory
+	std::cerr << "⚠️  Could not find project root, using current directory" << "\n";
+	return fs::current_path();
 }
 
 std::string read_file(const fs::path &path) {
 	std::ifstream file(path);
 	if (!file.is_open()) {
-		std::cerr << "❌ Cannot open: " << path << std::endl;
+		std::cerr << "❌ Cannot open: " << path << "\n";
 		return "";
 	}
-	return std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+	return {(std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>()};
 }
 
 void write_file(const fs::path &path, const std::string &content) {
@@ -84,11 +100,11 @@ int main() {
 		fs::path posts_dir = content_dir / "posts";
 		fs::path output_dir = fs::current_path().parent_path().parent_path() / "html";
 
-		std::cout << "📁 Content: " << content_dir << std::endl;
-		std::cout << "📁 Output:  " << output_dir << std::endl;
+		std::cout << "📁 Content: " << content_dir << "\n";
+		std::cout << "📁 Output:  " << output_dir << "\n";
 
 		if (!fs::exists(content_dir)) {
-			std::cerr << "❌ Content directory not found: " << content_dir << std::endl;
+			std::cerr << "❌ Content directory not found: " << content_dir << "\n";
 			return 1;
 		}
 
@@ -108,11 +124,11 @@ int main() {
 
 					std::string page = layout("<h1>" + post.title + "</h1>" + post.html);
 					write_file(output_dir / "posts" / (post.slug + ".html"), page);
-					std::cout << "✅ Generated: " << post.slug << std::endl;
+					std::cout << "✅ Generated: " << post.slug << "\n";
 				}
 			}
 		} else {
-			std::cout << "⚠️  No posts directory found at: " << posts_dir << std::endl;
+			std::cout << "⚠️  No posts directory found at: " << posts_dir << "\n";
 		}
 
 		// 2. Generate homepage
@@ -136,11 +152,11 @@ int main() {
 			write_file(output_dir / "about.html", about_html);
 		}
 
-		std::cout << "\n✅ Generated " << posts.size() << " posts" << std::endl;
-		std::cout << "📂 Output in: " << output_dir << std::endl;
+		std::cout << "\n✅ Generated " << posts.size() << " posts" << "\n";
+		std::cout << "📂 Output in: " << output_dir << "\n";
 
 	} catch (const std::exception &e) {
-		std::cerr << "❌ Error: " << e.what() << std::endl;
+		std::cerr << "❌ Error: " << e.what() << "\n";
 		return 1;
 	}
 
